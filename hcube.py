@@ -27,7 +27,7 @@ def a2a_src_dest(my_id, i):
 def a2a_transfer(my_id, i, inc=True):
     target = my_id ^ (2**i)
     # twisted hypercube
-    if (True):
+    if (False):
         if ((my_id, target) == (2,6)): 
             target = 7
         if ((my_id, target) == (6,2)): 
@@ -43,10 +43,12 @@ def a2a_transfer(my_id, i, inc=True):
         else:
             data[target][recloc[target]+j] = data[my_id][senloc[my_id]+j]
 
+import random
 for node in range(nodes):
     data.append([])
     for i in range (nodes):
-        data[node].append(i)
+        #data[node].append(i)
+        data[node].append(random.randint(1,10))
     recloc.append(0)
     senloc.append(0)
     reclocs.append([])
@@ -54,6 +56,18 @@ for node in range(nodes):
 
 print "Initial"
 print data
+
+# calculate the answer ahead of time (we will check it later)
+answer = []
+for i in range (nodes):
+    answer.append(0)
+for node in range (nodes):
+    for element in range (nodes):
+        answer[element] += data[node][element]
+print "Correct Answer"
+print answer
+
+
 
 print "Gather Reduce"
 for i in range(d-1, -1, -1):
@@ -78,3 +92,17 @@ for i in range(0, d):
     for n in range(nodes):
         a2a_transfer(n, i, False)
     print data
+
+print ">> Correct Answer <<"
+print answer
+
+print ">> Final Answer (per node) <<"
+print data
+
+print ">> Checking Answer <<"
+for node in range (0, nodes):
+    if (answer == data[node]):
+        print "Node %d Pass"%node
+    else:
+        print "Node %d Fail"%node
+
